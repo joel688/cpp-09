@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:14 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/18 11:14:13 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/18 12:08:13 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 #include <exception>
 #include <iostream>
 #include <map>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstdlib>
 
 class BitcoinExchange
 {
