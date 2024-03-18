@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:14 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/18 09:46:16 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/18 11:14:13 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,17 @@
 class BitcoinExchange
 {
 	private:
-		const std::map<const std::string, const float> CsvParsed;
+		const std::map<const std::string, const float> _CsvParsed;
 	public:
 		BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange &src);
 		~BitcoinExchange();
 		BitcoinExchange&	operator=(const BitcoinExchange& src);
-		const 				std::string getLine() const;
-		const				std::string splitLineDate(const std::string Line) const;
-		const				float splitLineValue(const std::string Line) const;
-		void				addData(const std::string& Date, const float Value);
+		void				parseCsv(std::ifstream inputFile);
+		std::string			splitLineDate(std::string line);
+		float 				splitLineValue(std::string line);
+		void				addData(std::string date, float value);
+		void				checkFormat(std::string line);
 	
 	class NoArgFileException : public std::exception
 	{
