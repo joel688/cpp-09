@@ -4,6 +4,7 @@ CXX			= c++
 CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -g3
 
 SRCS		= ./main.cpp\
+			  ./Class/BitcoinExchange/BitcoinExchange.cpp\
 
 OBJS		=		$(SRCS:.cpp=.o)
 

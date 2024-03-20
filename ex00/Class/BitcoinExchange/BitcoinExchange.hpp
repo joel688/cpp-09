@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:14 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/18 12:08:13 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/20 13:44:18 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,15 @@
 class BitcoinExchange
 {
 	private:
-		const std::map<const std::string, const float> _CsvParsed;
+		std::map<const std::string, const float> _CsvParsed;
 	public:
 		BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange &src);
 		~BitcoinExchange();
 		BitcoinExchange&	operator=(const BitcoinExchange& src);
-		void				parseCsv(std::ifstream inputFile);
-		std::string			splitLineDate(std::string line);
-		float 				splitLineValue(std::string line);
+		void				parseCsv(std::ifstream &inputFile);
+		std::string			splitLineDate(const std::string &line);
+		float 				splitLineValue(const std::string &line);
 		void				addData(std::string date, float value);
 		void				checkFormat(std::string line);
 	

@@ -6,11 +6,13 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:11 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/18 13:46:50 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/20 15:37:27 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./BitcoinExchange.hpp"
+#include <sstream>
+#include <string>
 
 // ----------Constructors----------
 
@@ -21,6 +23,7 @@ BitcoinExchange::BitcoinExchange()
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &src)
 {
+	*this = src;
 	return;
 }
 
@@ -39,31 +42,39 @@ BitcoinExchange::~BitcoinExchange()
 
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& src)
 {
+	this->_CsvParsed = src._CsvParsed;
 	return(*this);
 }
 
 // ----------Members_Functions----------
 
-void BitcoinExchange::parseCsv(std::ifstream inputFile)
+void BitcoinExchange::parseCsv(std::ifstream &inputFile)
 {
 	std::string line;
+	const char delimiter = '|';
 	if(!inputFile.is_open())
 		throw BitcoinExchange::NoArgFileException();
-	while(!inputFile.eof())
+	while(std::getline(inputFile, line))
 	{
-		std::getline(inputFile, line);
-		this->checkFormat(line);
-		this->addData(splitLineDate(line), splitLineValue(line));
+		std::cout << line << std::endl;
+		std::istringstream iss(line);
+		std::cout << line << std::endl;
+		std::string date, value;
+		std::getline(iss, date, delimiter);
+		std::cout << date << std::endl;
+		std::getline(iss, value, delimiter);
+		std::cout << value << std::endl;
+		this->addData(date, std::atof(value.c_str()));
 	}
 	inputFile.close();
 }
 
 void	BitcoinExchange::addData(std::string date, float value)
 {
-	
+	this->_CsvParsed.insert(std::map<std::string, float>::value_type(date, value));
 }
 
-std::string	BitcoinExchange::splitLineDate(std::string line)
+std::string	BitcoinExchange::splitLineDate(const std::string &line)
 {
 	std::string date;
 	for(size_t i = 0; i< line.size(); ++i)
@@ -75,7 +86,7 @@ std::string	BitcoinExchange::splitLineDate(std::string line)
 	return date;
 }
 
-float BitcoinExchange::splitLineValue(std::string line)
+float BitcoinExchange::splitLineValue(const std::string &line)
 {
 	std::string value;
 	bool delimiterFound = false;
@@ -111,6 +122,25 @@ void	BitcoinExchange::checkFormat(std::string line)
 	return;
 }
 
+const std::string BitcoinExchange::NoArgFileException::err() const throw()
+{
+	return("Error: Bad arg.");
+}
+
+const std::string BitcoinExchange::BadLineFormatException::err() const throw()
+{
+	return("Error: Bad Line Format.");
+}
+
+const std::string BitcoinExchange::BadDateFormatException::err() const throw()
+{
+	return("Error: Bad Date.");
+}
+
+const std::string BitcoinExchange::BadValueException::err() const throw()
+{
+	return("Error: Bad Value.");
+}
 // ----------Non_Members_Functions----------
 
 
