@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:14 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/20 13:44:18 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:53:45 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,16 @@ class BitcoinExchange
 		~BitcoinExchange();
 		BitcoinExchange&	operator=(const BitcoinExchange& src);
 		void				parseCsv(std::ifstream &inputFile);
-		std::string			splitLineDate(const std::string &line);
-		float 				splitLineValue(const std::string &line);
 		void				addData(std::string date, float value);
-		void				checkFormat(std::string line);
-	
+		void				checkFirstLine(const std::string &line);
+		const std::string	checkDateFormat(const std::string &line);
+		float			checkValueFormat(const std::string &line);
+		const std::string	NoArgFile(void);
+		const std::string 	BadLineFormat(void);
+		const std::string 	BadDateFormat(void);
+		const std::string	NotPosNumException(void);
+		const std::string	NotInt(void);
+
 	class NoArgFileException : public std::exception
 	{
 		public:
@@ -54,7 +59,12 @@ class BitcoinExchange
 		public:
 			const std::string err() const throw();
 	};
-	class BadValueException : public std::exception
+	class NotPosNumException : public std::exception
+	{
+		public:
+			const std::string err() const throw();
+	};
+	class NotIntException : public std::exception
 	{
 		public:
 			const std::string err() const throw();
