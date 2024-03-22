@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 10:18:06 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/21 12:59:20 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:22:36 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,6 @@ int main(int argc, char **argv)
 	{
 		std::cerr << e.err() << std::endl;
 	}
-	catch(BitcoinExchange::BadDateFormatException &e)
-	{
-		std::cerr << e.err() << std::endl;
-	}
-	catch(BitcoinExchange::NotIntException &e)
-	{
-		std::cerr << e.err() << std::endl;
-	}
-	catch(BitcoinExchange::NotPosNumException &e)
-	{
-		std::cerr << e.err() << std::endl;
-	}
-	catch(BitcoinExchange::BadLineFormatException &e)
-	{
-		std::cerr << e.err() << std::endl;
-	}
+	
 	return 0;
 }

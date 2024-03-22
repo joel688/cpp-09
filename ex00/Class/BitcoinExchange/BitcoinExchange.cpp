@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:11 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/21 17:43:28 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/22 16:01:53 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 // try catch pas possible donc modif converti tes exception en function qui ecrive dans un fichier
 
 #include "./BitcoinExchange.hpp"
-#include <cctype>
-#include <sstream>
-#include <string>
 
 // ----------Constructors----------
 
@@ -52,100 +49,124 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& src)
 
 // ----------Members_Functions----------
 
+void	BitcoinExchange::printContainer(void)
+{
+	std::map<const std::string, const std::string>::iterator it;
+	for(it = _CsvParsed.begin(); it != _CsvParsed.end(); ++it)
+	{
+		if(it->second == "")
+			std::cout << it->first << std::endl;
+		else if(it->first == "")
+			std::cout << it->second << std::endl;
+		else
+			std::cout << it->first << ' ' << it->second << std::endl;
+	}
+}
+
 void BitcoinExchange::parseCsv(std::ifstream &inputFile)
 {
-	std::string line;
+	std::string line, date, value;
 	std::getline(inputFile, line);
 	this->checkFirstLine(line);
 	while(std::getline(inputFile, line))
 	{
-		this->addData(this->checkDateFormat(line),this->checkValueFormat(line));
+		date = this->checkDateFormat(line);
+		value = this->checkValueFormat(line);
+		if(date[0] == 'E')
+			this->addData(date, "");
+		else if (value[0] == 'E')
+			this->addData("", value);
+		else
+			this->addData(date, value);
 	}
 	inputFile.close();
-	std::map<const std::string, const float>::iterator it;
-	for(it = _CsvParsed.begin(); it != _CsvParsed.end(); ++it)
-		std::cout << it->first << ' ' << it->second << std::endl;
+	this->printContainer();
 }
 
-void	BitcoinExchange::addData(std::string date, float value)
+void	BitcoinExchange::addData(std::string date, std::string value)
 {
-	this->_CsvParsed.insert(std::map<std::string, float>::value_type(date, value));
+	this->_CsvParsed.insert(std::map<std::string, std::string>::value_type(date, value));
 }
 
-void	BitcoinExchange::checkFirstLine(const std::string &line)
+const std::string	BitcoinExchange::checkFirstLine(const std::string &line)
 {
 	if(line != "date | value")
-		throw BitcoinExchange::BadLineFormatException();
-	return;
+		return (this->BadLineFormat());
+	return(line);
 }
 
 const std::string BitcoinExchange::checkDateFormat(const std::string &line)
 {
+
+	std::string date = line.substr(0, 10);
 	for(int i = 0; i < 10; ++i)
 	{
 		if(i == 4 || i == 7)
 		{
 			if (line[i] != '-')
-				throw BitcoinExchange::BadDateFormatException();
+				return (this->BadDateFormat(date));
 		}
-		else if(!std::isdigit(line[i]))
+		else if(!std::isdigit(date[i]))
 		{
-			throw BitcoinExchange::BadDateFormatException();
+			return (this->BadDateFormat(date));
 		}
 	}
 	if(line[5] > '1' || (line[6] > '2' && line[5] > '1') || line[8] > '3' || (line[8] == '3' && line[9] > '1'))
-		throw BitcoinExchange::NoArgFileException();
+		return (this->BadDateFormat(date));
 	if(line[10] != ' ' && line[11] != '|')
-		throw BitcoinExchange::BadDateFormatException();
-	std::string date = line.substr(0, 10);
+		return (this->BadDateFormat(date));
 	return (date);
 }
 
-float	BitcoinExchange::checkValueFormat(const std::string &line)
+const std::string	BitcoinExchange::checkValueFormat(const std::string &line)
 {
-	unsigned long int i = 0;
+	unsigned long int	i = 0;
+	bool				is_sep = false;
 
-	while(line[i] != '|')
+	while(line[i] && line[i] != '|')
+	{
+		if(line[i] == '|')
+			is_sep = true;
 		i++;
-	if(line[i+2])
+	}
+	if(is_sep == true && line[i+2])
 		i += 2;
 	else
-		throw BitcoinExchange::BadLineFormatException();
+		return (this->BadLineFormat());
 	std::string valuestr = line.substr(i, line.size());
 	float value = atof(valuestr.c_str());
 	if (value == 0 && valuestr[0] != '0')
-		throw BitcoinExchange::BadLineFormatException();
+		return (this->BadLineFormat());
 	if(value < 0)
-		throw BitcoinExchange::NotPosNumException();
+		return (this->NotPosNum());
 	if(((valuestr.size() == 1 && valuestr[0] != '0') && value == 0) || value > 2147483648)
-		throw BitcoinExchange::NotIntException();
-	return(value);
+		return (this->NotInt());
+	return(valuestr);
 }
 
-const std::string BitcoinExchange::NoArgFileException::err() const throw()
-{
-	return("Error: could not open file.");
-}
-
-const std::string BitcoinExchange::BadLineFormatException::err() const throw()
+const std::string	BitcoinExchange::BadLineFormat(void)
 {
 	return("Error: Bad Line Format.");
 }
 
-const std::string BitcoinExchange::BadDateFormatException::err() const throw()
+const std::string	BitcoinExchange::BadDateFormat(const std::string &line)
 {
-	return("Error: bad input => .");
+	return("Error: bad input => " + line + ".");
 }
 
-const std::string BitcoinExchange::NotPosNumException::err() const throw()
+const std::string	BitcoinExchange::NotPosNum(void)
 {
 	return("Error: not a positive number.");
 }
-const std::string BitcoinExchange::NotIntException::err() const throw()
+const std::string	BitcoinExchange::NotInt(void)
 {
 	return("Error: too large number.");
 }
 
+const std::string	BitcoinExchange::NoArgFileException::err() const throw()
+{
+	return("Error: could not open file.");
+}
 // ----------Non_Members_Functions----------
 
 
