@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:14 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/22 15:48:29 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/25 14:20:43 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class BitcoinExchange
 		const std::string	NotPosNum(void);
 		const std::string	NotInt(void);
 		void				printContainer(void);
-
+		void				parseIntput(std::ifstream &inputFile);
 	class NoArgFileException : public std::exception
 	{
 		public:

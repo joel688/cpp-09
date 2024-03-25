@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:11 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/25 14:05:05 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/25 14:20:50 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	BitcoinExchange::printContainer(void)
 	}
 }
 
-void BitcoinExchange::parseCsv(std::ifstream &inputFile)
+void BitcoinExchange::parseIntput(std::ifstream &inputFile)
 {
 	std::string line, date, value;
 	std::getline(inputFile, line);
@@ -78,6 +78,19 @@ void BitcoinExchange::parseCsv(std::ifstream &inputFile)
 			this->addData("", value);
 		else
 			this->addData(date, value);
+	}
+	inputFile.close();
+	this->printContainer();
+}
+
+void BitcoinExchange::parseCsv(std::ifstream &inputFile)
+{
+	std::string line, date, value;
+	std::getline(inputFile, line);
+	this->checkFirstLine(line);
+	while(std::getline(inputFile, line))
+	{
+		this->addData(line.substr(0, 10), line.substr(11, 1000));
 	}
 	inputFile.close();
 	this->printContainer();
@@ -121,14 +134,14 @@ const std::string	BitcoinExchange::checkValueFormat(const std::string &line)
 	unsigned long int	i = 0;
 	bool				is_sep = false;
 
-	while(line[i] && line[i] != ',')
+	while(line[i] && line[i] != '|')
 	{
 		i++;
-		if(line[i] == ',')
+		if(line[i] == '|')
 			is_sep = true;
 	}
-	if(is_sep == true && line[i+1])
-		i += 1;
+	if(is_sep == true && line[i + 2])
+		i += 2;
 	else
 		return (this->BadLineFormat());
 	std::string valuestr = line.substr(i, line.size());
