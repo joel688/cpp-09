@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:11 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/22 16:01:53 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/03/25 14:05:05 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	BitcoinExchange::printContainer(void)
 		else if(it->first == "")
 			std::cout << it->second << std::endl;
 		else
-			std::cout << it->first << ' ' << it->second << std::endl;
+			std::cout << it->first << " | " << it->second << std::endl;
 	}
 }
 
@@ -113,8 +113,6 @@ const std::string BitcoinExchange::checkDateFormat(const std::string &line)
 	}
 	if(line[5] > '1' || (line[6] > '2' && line[5] > '1') || line[8] > '3' || (line[8] == '3' && line[9] > '1'))
 		return (this->BadDateFormat(date));
-	if(line[10] != ' ' && line[11] != '|')
-		return (this->BadDateFormat(date));
 	return (date);
 }
 
@@ -123,14 +121,14 @@ const std::string	BitcoinExchange::checkValueFormat(const std::string &line)
 	unsigned long int	i = 0;
 	bool				is_sep = false;
 
-	while(line[i] && line[i] != '|')
+	while(line[i] && line[i] != ',')
 	{
-		if(line[i] == '|')
-			is_sep = true;
 		i++;
+		if(line[i] == ',')
+			is_sep = true;
 	}
-	if(is_sep == true && line[i+2])
-		i += 2;
+	if(is_sep == true && line[i+1])
+		i += 1;
 	else
 		return (this->BadLineFormat());
 	std::string valuestr = line.substr(i, line.size());
