@@ -6,12 +6,9 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:11 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/25 14:20:50 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:51:12 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// ne pass pas le test si pas de pipe ou value ou espace a la place de precedemment cite
-// try catch pas possible donc modif converti tes exception en function qui ecrive dans un fichier
 
 #include "./BitcoinExchange.hpp"
 
@@ -43,16 +40,77 @@ BitcoinExchange::~BitcoinExchange()
 
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& src)
 {
-	this->_CsvParsed = src._CsvParsed;
+	this->_TxtParsed = src._TxtParsed;
+	this->_DataBaseParsed = src._DataBaseParsed;
 	return(*this);
 }
 
 // ----------Members_Functions----------
 
+void	BitcoinExchange::printResult(void)
+{
+	std::vector<std::pair<std::string, std::string> >::iterator it1 = this->_TxtParsed.begin();
+
+	while(it1 != this->_TxtParsed.end())
+	{
+		if(it1->first[0] == 'E' || it1->second[0] == 'E' || findLowerKey(it1->first)->first[0] == 'E' || findLowerKey(it1->first)->second[0] == 'E') 
+		{
+			if(it1->second == "")
+				std::cout << it1->first << std::endl;
+			else if(it1->first == "")
+				std::cout << it1->second << std::endl;
+			else if(findLowerKey(it1->first)->first[0] == 'E')
+				std::cout << findLowerKey(it1->first)->first << std::endl;
+			else if(findLowerKey(it1->first)->second[0] == 'E')
+				std::cout << findLowerKey(it1->first)->second << std::endl;
+		}
+		else
+		{
+			float value = std::atof(findLowerKey(it1->first)->second.c_str());
+			float quantity = std::atof(it1->second.c_str());
+			float to_print = value * quantity;
+			std::cout << it1->first << " => " << it1->second << " = ";
+			std::cout << to_print << std::endl;
+		}
+		it1++;
+	}
+}
+
+std::map<std::string, std::string>::iterator	BitcoinExchange::findLowerKey(std::string date)
+{
+	std::map<std::string, std::string>::iterator it = this->_DataBaseParsed.lower_bound(date);
+	std::map<std::string, std::string>::iterator end = this->_DataBaseParsed.end();
+	end--;
+	if(!(it == this->_DataBaseParsed.begin()))
+	{
+		if (it == this->_DataBaseParsed.begin() || (it != this->_DataBaseParsed.end() && date.compare((--it)->first) < it->first.compare(date)))
+			--it;
+		else if(it == this->_DataBaseParsed.end())
+			it = end;
+		else
+			++it;
+	}
+	return it;
+}
+
 void	BitcoinExchange::printContainer(void)
 {
-	std::map<const std::string, const std::string>::iterator it;
-	for(it = _CsvParsed.begin(); it != _CsvParsed.end(); ++it)
+	std::vector<std::pair<std::string, std::string> >::iterator it;
+	for(it = _TxtParsed.begin(); it != _TxtParsed.end(); ++it)
+	{
+		if(it->second == "")
+			std::cout << it->first << std::endl;
+		else if(it->first == "")
+			std::cout << it->second << std::endl;
+		else
+			std::cout << it->first << " | " << it->second << std::endl;
+	}
+}
+
+void	BitcoinExchange::printDataBase(void)
+{
+	std::map<std::string, std::string>::iterator it;
+	for(it = _DataBaseParsed.begin(); it != _DataBaseParsed.end(); ++it)
 	{
 		if(it->second == "")
 			std::cout << it->first << std::endl;
@@ -80,7 +138,6 @@ void BitcoinExchange::parseIntput(std::ifstream &inputFile)
 			this->addData(date, value);
 	}
 	inputFile.close();
-	this->printContainer();
 }
 
 void BitcoinExchange::parseCsv(std::ifstream &inputFile)
@@ -90,15 +147,25 @@ void BitcoinExchange::parseCsv(std::ifstream &inputFile)
 	this->checkFirstLine(line);
 	while(std::getline(inputFile, line))
 	{
-		this->addData(line.substr(0, 10), line.substr(11, 1000));
+		date = this->checkDateFormat(line);
+		value = this->checkValueFormatCsv(line);
+		if(date[0] == 'E')
+			this->addToDataBase(line.substr(0, 10), date);
+		else
+			this->addToDataBase(date, value);
+		this->addToDataBase(date, value);
 	}
 	inputFile.close();
-	this->printContainer();
 }
 
 void	BitcoinExchange::addData(std::string date, std::string value)
 {
-	this->_CsvParsed.insert(std::map<std::string, std::string>::value_type(date, value));
+	this->_TxtParsed.push_back(std::make_pair(date, value));
+}
+
+void	BitcoinExchange::addToDataBase(std::string date, std::string value)
+{
+	this->_DataBaseParsed.insert(std::map<std::string, std::string>::value_type(date, value));
 }
 
 const std::string	BitcoinExchange::checkFirstLine(const std::string &line)
@@ -129,6 +196,32 @@ const std::string BitcoinExchange::checkDateFormat(const std::string &line)
 	return (date);
 }
 
+const std::string	BitcoinExchange::checkValueFormatCsv(const std::string &line)
+{
+	unsigned long int	i = 0;
+	bool				is_sep = false;
+
+	while(line[i] && line[i] != ',')
+	{
+		i++;
+		if(line[i] == ',')
+			is_sep = true;
+	}
+	if(is_sep == true && line[i + 1])
+		i += 1;
+	else
+		return (this->BadLineFormat());
+	std::string valuestr = line.substr(i, line.size());
+	float value = atof(valuestr.c_str());
+	if (value == 0 && valuestr[0] != '0')
+		return (this->BadLineFormat());
+	if(value < 0)
+		return (this->NotPosNum());
+	if(((valuestr.size() == 1 && valuestr[0] != '0') && value == 0) || value > 2147483648)
+		return (this->NotInt());
+	return(valuestr);
+}
+
 const std::string	BitcoinExchange::checkValueFormat(const std::string &line)
 {
 	unsigned long int	i = 0;
@@ -150,7 +243,7 @@ const std::string	BitcoinExchange::checkValueFormat(const std::string &line)
 		return (this->BadLineFormat());
 	if(value < 0)
 		return (this->NotPosNum());
-	if(((valuestr.size() == 1 && valuestr[0] != '0') && value == 0) || value > 2147483648)
+	if(((valuestr.size() == 1 && valuestr[0] != '0') && value == 0) || value > 1000)
 		return (this->NotInt());
 	return(valuestr);
 }
@@ -174,7 +267,7 @@ const std::string	BitcoinExchange::NotInt(void)
 	return("Error: too large number.");
 }
 
-const std::string	BitcoinExchange::NoArgFileException::err() const throw()
+const std::string	BitcoinExchange::NoArgFiles(void)
 {
 	return("Error: could not open file.");
 }

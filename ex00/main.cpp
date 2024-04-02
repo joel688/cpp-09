@@ -6,35 +6,29 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 10:18:06 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/03/25 14:25:30 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:54:04 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// tu add pas bien pour parseinput donc fait le bien
-
 #include "./Class/BitcoinExchange/BitcoinExchange.hpp"
-#include <fstream>
 
 int main(int argc, char **argv)
 {
 	BitcoinExchange btc;
 	if(argc != 3)
-		throw BitcoinExchange::NoArgFileException();
-	try
 	{
-
-		std::ifstream inputFile(argv[1]);
-		std::ifstream inputTxt(argv[2]);
-		if(!inputFile.is_open() || !inputTxt.is_open())
-			throw BitcoinExchange::NoArgFileException();
-		btc.parseCsv(inputFile);
-		btc.parseIntput(inputTxt);
-		
+		std::cout << btc.NoArgFiles() << std::endl;
+		return 0;
 	}
-	catch(BitcoinExchange::NoArgFileException &e)
+	std::ifstream inputCsv(argv[1]);
+	std::ifstream inputTxt(argv[2]);
+	if(!inputCsv.is_open() || !inputTxt.is_open())
 	{
-		std::cerr << e.err() << std::endl;
+		std::cout << btc.NoArgFiles() << std::endl;
+		return 0;
 	}
-	
+	btc.parseCsv(inputCsv);
+	btc.parseIntput(inputTxt);
+	btc.printResult();
 	return 0;
 }
