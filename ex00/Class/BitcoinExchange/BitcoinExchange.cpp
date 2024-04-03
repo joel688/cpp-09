@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:11 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/02 18:51:12 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:41:54 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& src)
 }
 
 // ----------Members_Functions----------
+
+bool	BitcoinExchange::isCsvEmpty(const std::string& inputCsv)
+{
+	std::ifstream file(inputCsv.c_str());
+	return file.peek() == std::ifstream::traits_type::eof();
+}
 
 void	BitcoinExchange::printResult(void)
 {

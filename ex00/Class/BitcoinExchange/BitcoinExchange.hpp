@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 09:46:14 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/02 18:50:58 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:39:54 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class BitcoinExchange
 		void											parseIntput(std::ifstream &inputFile);
 		std::map<std::string, std::string>::iterator	findLowerKey(std::string date);
 		void											printResult(void);
+		bool											isCsvEmpty(const std::string& inputCsv);
 	
 };
 
