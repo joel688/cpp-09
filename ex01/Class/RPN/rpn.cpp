@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:56:56 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/03 15:47:05 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:07:53 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ double Rpn::evaluateRPN(const std::string& expression)
             if (_operands.size() < 2)
 			{
                 std::cerr << "Error" << std::endl;
-                return 0; // Ou une autre valeur de sortie d'erreur
-            }
+                return 0;
+			}
             double op2 = _operands.back();
             _operands.pop_back();
             double op1 = _operands.back();
@@ -84,8 +84,8 @@ double Rpn::evaluateRPN(const std::string& expression)
                     break;
                 default:
                     std::cerr << "Error" << token << std::endl;
-                    return 0; // Ou une autre valeur de sortie d'erreur
-            }
+                    return 0;
+			}
         }
     }
 	if (_operands.size() == 1)
@@ -98,7 +98,7 @@ double Rpn::evaluateRPN(const std::string& expression)
 	else
 	{
         std::cerr << "Error" << std::endl;
-        return 0; // Ou une autre valeur de sortie d'erreur
+        return 0;
     }
 }
 
