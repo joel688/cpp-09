@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:18 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 11:28:18 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:49:29 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 
 //GERER LES DOUBLONS PRENDRE UNE DECISION
+//Gerer laffichage temps container size et us 
 
 // ----------Constructors----------
 
