@@ -6,11 +6,12 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:18 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 10:48:35 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:28:18 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./PmergeMe.hpp"
+#include <iostream>
 
 
 //GERER LES DOUBLONS PRENDRE UNE DECISION
@@ -46,12 +47,28 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& src)
 }
 // ----------Members_Functions----------
 
+void PmergeMe::printDeque(void)
+{
+    std::deque<int>::const_iterator it;
+    std::cout << "Before: ";
+    for (it = this->_args.begin(); it != this->_args.end(); ++it)
+	{
+        std::cout << *it;
+        if (it != this->_args.end() - 1)
+            std::cout << " ";
+    }
+	std::cout << std::endl;
+}
+
 void PmergeMe::printMap(void)
 {
+	std::cout << "After:";
     for (std::map<int, int>::const_iterator it = this->_final.begin(); it != this->_final.end(); ++it) 
 	{
-        std::cout << "Clé : " << it->first << ", Valeur : " << it->second << std::endl;
+        std::cout << " ";
+        std::cout << it->first;
     }
+	std::cout << std::endl;
 }
 
 void	PmergeMe::buildFinalContainer(void)
@@ -93,24 +110,27 @@ int	PmergeMe::decreaseOrIncreaseSequence(void)
 
 void	PmergeMe::buildSequences(void)
 {
-	int sens = this->decreaseOrIncreaseSequence();
-	int i = 0;
-	if(sens == -1)
+	while(!this->_args.empty())
 	{
-		for(i = 0; this->_args[i] < this->_args[i+1]; ++i){}
-		this->addToMultiMap(i);
-		this->deleteInDeque(i);
-	}
-	else if (sens == 1)
-	{
-		for(i = 0; this->_args[i] > this->_args[i+1]; ++i){}
-		this->addToMultiMap(i);
-		this->deleteInDeque(i);
-	}
-	else if(sens == 0)
-	{
-		this->addToMultiMap(i);
-		this->deleteInDeque(i);
+		int sens = this->decreaseOrIncreaseSequence();
+		int i = 0;
+		if(sens == -1)
+		{
+			for(i = 0; this->_args[i] < this->_args[i+1]; ++i){}
+			this->addToMultiMap(i);
+			this->deleteInDeque(i);
+		}
+		else if (sens == 1)
+		{
+			for(i = 0; this->_args[i] > this->_args[i+1]; ++i){}
+			this->addToMultiMap(i);
+			this->deleteInDeque(i);
+		}
+		else if(sens == 0)
+		{
+			this->addToMultiMap(i);
+			this->deleteInDeque(i);
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:25 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 10:21:04 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 11:25:59 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@
 class PmergeMe 
 {
 	private:
-
-	public:
-		int nb_sequence;
 		std::deque<int> _args;
 		std::multimap<int, int> _sequences;
 		std::map<int, int> _final;
+
+	public:
+		int nb_sequence;
 		PmergeMe();
 		PmergeMe(const PmergeMe& other);
 		~PmergeMe();
@@ -41,6 +41,7 @@ class PmergeMe
 		void	buildSequences(void);
 		void	buildFinalContainer(void);
 		void	printMap(void);
+		void	printDeque(void);
 
 };
 
