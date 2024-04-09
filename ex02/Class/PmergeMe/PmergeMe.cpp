@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:18 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 09:08:18 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 10:48:35 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& src)
 
 void PmergeMe::printMap(void)
 {
-    for (std::multimap<int, double>::const_iterator it = this->_sequences.begin(); it != this->_sequences.end(); ++it) 
+    for (std::map<int, int>::const_iterator it = this->_final.begin(); it != this->_final.end(); ++it) 
 	{
         std::cout << "Clé : " << it->first << ", Valeur : " << it->second << std::endl;
     }
@@ -57,14 +57,12 @@ void PmergeMe::printMap(void)
 void	PmergeMe::buildFinalContainer(void)
 {
 	int i = 0;
-	while(!_sequences.empty())
+	while(!this->_sequences.empty())
 	{
-		std::pair<std::multimap<int, double>::iterator, std::multimap<int, double>::iterator> range = this->_sequences.equal_range(i);
- 		for (std::multimap<int, double>::iterator it = range.first; it != range.second; ++it)
-		{
-			this->_final.insert(*it);
-		}
-		this->_sequences.erase(range.first, range.second);
+		std::pair<std::multimap<int, int>::iterator, std::multimap<int, int>::iterator> range = this->_sequences.equal_range(i);
+		for(std::multimap<int, int>::iterator it = range.first; it != range.second; ++it)
+			this->_final.insert(std::make_pair(it->second, 0));
+		this->_sequences.erase(i);
 		i++;
 	}
 }
@@ -84,12 +82,13 @@ void	PmergeMe::addToMultiMap(int i)
 
 int	PmergeMe::decreaseOrIncreaseSequence(void)
 {
+	if(this->_args.size() == 1)
+		return 0;
 	if(this->_args[0] < this->_args[1])
 		return -1;
 	else if(this->_args[0] > this->_args[1])
 		return 1;
-	else
-		return 0;
+	return 0;
 }
 
 void	PmergeMe::buildSequences(void)
@@ -105,6 +104,11 @@ void	PmergeMe::buildSequences(void)
 	else if (sens == 1)
 	{
 		for(i = 0; this->_args[i] > this->_args[i+1]; ++i){}
+		this->addToMultiMap(i);
+		this->deleteInDeque(i);
+	}
+	else if(sens == 0)
+	{
 		this->addToMultiMap(i);
 		this->deleteInDeque(i);
 	}

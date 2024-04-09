@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:54:24 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 09:08:33 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 10:18:46 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,13 @@ int main(int argc, char **argv)
 			}
 		}
 	}
+	printDeque(test._args);
 	while(!test._args.empty())
 		test.buildSequences();
-	test.printMap();
 	test.buildFinalContainer();
 
-	printDeque(test._args);
+	test.printMap();
+
 
 
 }
