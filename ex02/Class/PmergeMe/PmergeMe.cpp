@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:18 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 11:49:29 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 13:32:47 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,16 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& src)
     return *this;
 }
 // ----------Members_Functions----------
+
+int	PmergeMe::sizeMap(void)
+{
+	return (this->_final.size());
+}
+
+int	PmergeMe::sizeMultimap(void)
+{
+	return (this->_sequences.size());
+}
 
 void PmergeMe::printDeque(void)
 {

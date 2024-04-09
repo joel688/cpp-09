@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:25 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/09 11:25:59 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 13:31:40 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ class PmergeMe
 		void	buildFinalContainer(void);
 		void	printMap(void);
 		void	printDeque(void);
-
+		int		sizeMap(void);
+		int		sizeMultimap(void);
 };
 
 #endif
