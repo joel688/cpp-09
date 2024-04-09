@@ -6,17 +6,14 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:18 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/04 18:51:59 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 09:08:18 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./PmergeMe.hpp"
-#include <algorithm>
 
 
 //GERER LES DOUBLONS PRENDRE UNE DECISION
-
-
 
 // ----------Constructors----------
 
@@ -49,16 +46,26 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& src)
 }
 // ----------Members_Functions----------
 
-void	Pmerge::buildFinalContainer(void)
+void PmergeMe::printMap(void)
+{
+    for (std::multimap<int, double>::const_iterator it = this->_sequences.begin(); it != this->_sequences.end(); ++it) 
+	{
+        std::cout << "Clé : " << it->first << ", Valeur : " << it->second << std::endl;
+    }
+}
+
+void	PmergeMe::buildFinalContainer(void)
 {
 	int i = 0;
-	std::pair<std::multimap<int, std::string>::iterator, std::multimap<int, std::string>::iterator> range = this->_sequences.equal_range(i);
 	while(!_sequences.empty())
 	{
-		while((this->_sequences.equal_range(i)) != 0)
+		std::pair<std::multimap<int, double>::iterator, std::multimap<int, double>::iterator> range = this->_sequences.equal_range(i);
+ 		for (std::multimap<int, double>::iterator it = range.first; it != range.second; ++it)
 		{
-
+			this->_final.insert(*it);
 		}
+		this->_sequences.erase(range.first, range.second);
+		i++;
 	}
 }
 

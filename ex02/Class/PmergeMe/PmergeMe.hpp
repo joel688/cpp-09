@@ -6,7 +6,7 @@
 /*   By: joakoeni <joakoeni@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 10:43:25 by joakoeni          #+#    #+#             */
-/*   Updated: 2024/04/04 18:24:06 by joakoeni         ###   ########.fr       */
+/*   Updated: 2024/04/09 09:06:36 by joakoeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <string>
 #include <cstdlib>
 #include <cmath>
+#include <algorithm>
 
 class PmergeMe 
 {
@@ -27,8 +28,8 @@ class PmergeMe
 	public:
 		int nb_sequence;
 		std::deque<int> _args;
-		std::multimap<int, int> _sequences;
-		std::map<int, int> _final;
+		std::multimap<int, double> _sequences;
+		std::map<int, double> _final;
 		PmergeMe();
 		PmergeMe(const PmergeMe& other);
 		~PmergeMe();
@@ -38,6 +39,8 @@ class PmergeMe
 		void	addToMultiMap(int i);
 		int		decreaseOrIncreaseSequence(void);
 		void	buildSequences(void);
+		void	buildFinalContainer(void);
+		void	printMap(void);
 
 };
 
